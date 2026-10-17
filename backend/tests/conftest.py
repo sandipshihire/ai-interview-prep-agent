@@ -9,6 +9,9 @@ os.environ["DATABASE_URL"] = "sqlite:///./test_interview_ai.db"
 os.environ["SECRET_KEY"] = "test_secret_key_12345"
 os.environ["AI_PROVIDER"] = "demo"
 
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from app.database.session import Base, get_db
 from app.main import app
 

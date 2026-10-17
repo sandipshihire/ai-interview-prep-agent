@@ -9,8 +9,12 @@ class Settings:
     SECRET_KEY: str = os.getenv("SECRET_KEY", "interviewai_development_secret_key_2026_jwt_token_secure")
     ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./interview_ai.db")
-    UPLOAD_DIR: str = os.getenv("UPLOAD_DIR", "./uploads")
+    _is_vercel = bool(os.getenv("VERCEL"))
+    _default_db = "sqlite:////tmp/interview_ai.db" if _is_vercel else "sqlite:///./interview_ai.db"
+    _default_upload = "/tmp/uploads" if _is_vercel else "./uploads"
+
+    DATABASE_URL: str = os.getenv("DATABASE_URL", _default_db).replace("postgres://", "postgresql://")
+    UPLOAD_DIR: str = os.getenv("UPLOAD_DIR", _default_upload)
     MAX_UPLOAD_SIZE_MB: int = int(os.getenv("MAX_UPLOAD_SIZE_MB", "5"))
     AI_PROVIDER: str = os.getenv("AI_PROVIDER", "demo")
     AI_API_KEY: str = os.getenv("AI_API_KEY", "")
@@ -26,6 +30,11 @@ class Settings:
 
 settings = Settings()
 
-# Ensure uploads directory exists
-upload_path = Path(settings.UPLOAD_DIR)
-upload_path.mkdir(parents=True, exist_ok=True)
+# Ensure uploads directory exists (gracefully handle serverless read-only filesystems)
+try:
+    upload_path = Path(settings.UPLOAD_DIR)
+    upload_path.mkdir(parents=True, exist_ok=True)
+except Exception:
+    upload_path = Path("/tmp/uploads")
+    upload_path.mkdir(parents=True, exist_ok=True)
+
