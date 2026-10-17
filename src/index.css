@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-slate-800 bg-slate-50 dark:bg-[#0F172A] dark:text-[#F8FAFC];
+  }
+}
+
+/* Custom scrollbar for modern dashboards */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-600;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  @apply bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-700/60;
+}
+
+.glass-card {
+  @apply bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+/* Audio waveform animation bars */
+.waveform-bar {
+  display: inline-block;
+  width: 4px;
+  background: linear-gradient(to top, #6366F1, #06B6D4);
+  border-radius: 9999px;
+  animation: pulse-wave 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-wave {
+  0% {
+    height: 8px;
+  }
+  100% {
+    height: 36px;
+  }
+}
